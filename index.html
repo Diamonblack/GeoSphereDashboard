@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLED Glass Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="bento-container">
+        
+        <!-- 1. CLOCK -->
+        <div class="card area-clock">
+            <div id="digital-clock">--:--</div>
+            <div id="digital-date">INITIALIZING...</div>
+        </div>
+
+        <!-- 2. SYSTEM STATS -->
+        <div class="card area-system">
+            <!-- CPU Ring -->
+            <div class="sys-group">
+                <div class="sys-ring">
+                    <svg><circle cx="30" cy="30" r="25"/><circle cx="30" cy="30" r="25" stroke="var(--accent-cpu)" id="ring-cpu" style="stroke-dashoffset: 157;"/></svg>
+                    <div style="position:absolute; font-size:0.6rem; font-weight:bold;">CPU</div>
+                </div>
+                <div class="sys-text">
+                    <span class="sys-num" id="sys-cpu-val">--%</span>
+                    <div class="sys-chart-mini">
+                        <canvas id="cpuChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUICKLINKS DOCK -->
+            <div class="sys-dock">
+                <!-- Browser -->
+                <a href="https://google.com" target="_blank" class="dock-btn" data-label="NET">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </a>
+                <!-- Terminal/Code -->
+                <div class="dock-btn" data-label="TERM">
+                    <svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                </div>
+                <!-- Files -->
+                <div class="dock-btn" data-label="DATA">
+                    <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <!-- Chat/Mail -->
+                <div class="dock-btn" data-label="COMM">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <!-- Grid/Apps -->
+                <div class="dock-btn" data-label="APPS">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+            </div>
+
+            <!-- RAM Ring -->
+            <div class="sys-group">
+                <div class="sys-ring">
+                    <svg><circle cx="30" cy="30" r="25"/><circle cx="30" cy="30" r="25" stroke="var(--accent-ram)" id="ring-ram" style="stroke-dashoffset: 157;"/></svg>
+                    <div style="position:absolute; font-size:0.6rem; font-weight:bold;">RAM</div>
+                </div>
+                <div class="sys-text">
+                    <span class="sys-num" id="sys-ram-val">--%</span>
+                    <span class="sys-lbl">MEMORY</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. MAIN WEATHER + SOLAR CYCLE -->
+        <div class="card area-weather-main">
+            <div class="label">WEATHER <span style="color:var(--text-accent)">STATION 11105</span></div>
+            
+            <div class="big-temp-wrapper">
+                <div id="main-temp" class="big-temp">--°</div>
+                <div class="weather-summary">Feldkirch, AT</div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-row">
+                    <span class="d-icon">≋</span>
+                    <span class="d-val" id="stat-wind">-- km/h</span>
+                </div>
+                <div class="detail-row">
+                    <span class="d-icon">☂</span>
+                    <span class="d-val" style="color:var(--accent-rain)" id="stat-rain">-- mm</span>
+                </div>
+                <div class="detail-row">
+                    <span class="d-icon">💧</span>
+                    <span class="d-val" id="stat-humidity">--%</span>
+                </div>
+            </div>
+
+            <!-- Solar Arc Widget -->
+            <div class="solar-container">
+                <svg class="solar-svg" viewBox="0 0 200 60" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradSun" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ff5555;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#ffcc00;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#bd93f9;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Arc Path: M 10,55 Q 100,-20 190,55 -->
+                    <path d="M 10,55 Q 100,-20 190,55" class="arc-bg" />
+                    <path d="M 10,55 Q 100,-20 190,55" class="arc-progress" id="solar-path" stroke-dasharray="210" stroke-dashoffset="210" />
+                    <circle cx="10" cy="55" r="5" class="sun-dot" id="sun-dot" />
+                </svg>
+                <div class="solar-labels">
+                    <span id="label-sunrise">06:00</span>
+                    <span id="label-sunset">20:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. CHART & HOURLY FORECAST -->
+        <div class="card area-chart">
+            <div class="chart-header">
+                <div class="label">24H ANALYSIS</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary)">Temperature & Precipitation Trend</div>
+            </div>
+            
+            <div class="chart-canvas-wrapper">
+                <canvas id="weatherChart"></canvas>
+            </div>
+
+            <div class="forecast-strip" id="forecast-hourly">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- 5. WEBCAM & DAILY FORECAST -->
+        <div class="area-webcam">
+            <!-- Cam Module -->
+            <div class="webcam-module">
+                <div id="webcam-bg"></div>
+                
+                <div class="cam-hud-overlay">
+                    <div class="hud-top">
+                        <div class="cam-badge" style="position:static;">LIVE FEED</div>
+                        <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--text-accent);">COORD: 47.238N / 9.600E</div>
+                    </div>
+                    <div class="corners"></div>
+                    <div class="hud-bottom">
+                        <span>FOTO-WEBCAM.EU // FELDKIRCH</span>
+                        <span id="cam-status">SIGNAL: STABLE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Module -->
+            <div class="daily-card">
+                <div class="label" style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px;">5-DAY FORECAST</div>
+                <div class="daily-list" id="forecast-daily" style="display:flex; flex-direction:column; gap:12px;">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. SONIC MEDIA (Interactive) -->
+        <div class="area-media">
+            <div class="media-glow"></div>
+            
+            <div class="media-art-wrapper">
+                <img src="https://i.scdn.co/image/ab67616d0000b273754b2fddebe7039fdb912837" class="media-art" id="media-art">
+            </div>
+            
+            <div class="media-center">
+                <div class="media-meta">
+                    <div class="track-title" id="track-title">Cyberpunk City</div>
+                    <div class="track-artist" id="track-artist">Synthwave Mix</div>
+                </div>
+                
+                <div class="media-controls">
+                    <button class="ctrl-btn sm" id="btn-prev"><svg viewBox="0 0 24 24"><path d="M19 20L9 12l10-8v16zM5 19h2V5H5v14z"/></svg></button>
+                    <button class="ctrl-btn lg" id="btn-play"><svg viewBox="0 0 24 24" id="icon-play"><path d="M8 5v14l11-7z"/></svg></button>
+                    <button class="ctrl-btn sm" id="btn-next"><svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zM19 5h2v14h-2V5z"/></svg></button>
+                </div>
+            </div>
+
+            <div class="sound-wave">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

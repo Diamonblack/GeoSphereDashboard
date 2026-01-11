@@ -1,0 +1,13 @@
+# Generated Data
+weather_data.js
+webcam_latest.jpg
+*.tmp
+*.log
+
+# System Files
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
