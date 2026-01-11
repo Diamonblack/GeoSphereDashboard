@@ -2,8 +2,8 @@
 
 A futuristic, "Command Center" style dashboard designed for **Lively Wallpaper**.  
 It combines real-time weather data from Austria (GeoSphere), high-quality webcam feeds, and local system metrics (CPU/RAM) into a unified OLED-friendly interface.
+Desigedn for 3440x1440 monitors.
 
-![Dashboard Preview]
 <img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/0eb61c74-417d-435e-9b39-71d79e58a444" />
 
 ## ✨ Features
